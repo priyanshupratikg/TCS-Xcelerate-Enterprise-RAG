@@ -202,18 +202,6 @@ After successful execution:
 ---
 
 
-# Future Enhancements
 
-* Support multiple document formats (DOCX, TXT, HTML).
-* Hybrid search (keyword + semantic search).
-* Metadata-based filtering.
-* Incremental document indexing.
-* Support for multiple vector collections.
-* Integration with advanced Large Language Models (LLMs).
 
----
-
-# Conclusion
-
-The RAG module forms the foundation of the Enterprise RAG system by transforming unstructured PDF documents into searchable vector representations. Through document extraction, intelligent chunking, embedding generation, and semantic retrieval, the module enables fast, context-aware information retrieval and provides high-quality context for downstream AI applications.
 
