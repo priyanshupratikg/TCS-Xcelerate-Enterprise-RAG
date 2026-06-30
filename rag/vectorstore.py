@@ -1,68 +1,80 @@
-
-from pathlib import Path
-
 from langchain_chroma import Chroma
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from rag.embeddings import get_embeddings
 
-# Location where ChromaDB will store vectors
-VECTOR_DB_PATH = Path("database/chroma_db")
+
+PDF_PATH = "data/Admission.pdf"
+PERSIST_DIRECTORY = "database/vectordb"
 
 
-class VectorStore:
-    def __init__(self):
-        self.embedding_model = get_embeddings()
+def create_vector_db():
+    print("Loading PDF...")
 
-    def create(self, documents):
-        """
-        Create a new Chroma vector database.
-        """
+    loader = PyPDFLoader(PDF_PATH)
+    documents = loader.load()
 
-        db = Chroma.from_documents(
-            documents=documents,
-            embedding=self.embedding_model,
-            persist_directory=str(VECTOR_DB_PATH),
-        )
+    print(f"Loaded {len(documents)} page(s).")
 
-        print("Vector database created successfully.")
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=500,
+        chunk_overlap=100
+    )
 
-        return db
+    chunks = text_splitter.split_documents(documents)
 
-    def load(self):
-        """
-        Load an existing Chroma database.
-        """
+    print(f"Created {len(chunks)} chunks.")
 
-        if not VECTOR_DB_PATH.exists():
-            raise FileNotFoundError(
-                "Vector database not found. Run document ingestion first."
-            )
+    embeddings = get_embeddings()
 
-        return Chroma(
-            persist_directory=str(VECTOR_DB_PATH),
-            embedding_function=self.embedding_model,
-        )
+    vectorstore = Chroma.from_documents(
+        documents=chunks,
+        embedding=embeddings,
+        persist_directory=PERSIST_DIRECTORY
+    )
 
-    def get_retriever(self, k=5):
-        """
-        Return a retriever for Retrieval-Augmented Generation.
-        """
+    print("Vector database created successfully!")
 
-        db = self.load()
+    return vectorstore
 
-        return db.as_retriever(
-            search_type="similarity",
-            search_kwargs={"k": k},
-        )
 
-    def similarity_search(self, query, k=5):
-        """
-        Retrieve the most similar chunks.
-        """
+def test_similarity_search(vectorstore):
+    print("\nTesting similarity search...\n")
 
-        db = self.load()
+    query = input("Enter your query: ")
 
-        return db.similarity_search(
-            query=query,
-            k=k,
-        )
+    results = vectorstore.similarity_search(
+        query,
+        k=3
+    )
+
+    print("\nTop Results:\n")
+
+    for i, doc in enumerate(results, start=1):
+        print(f"Result {i}")
+        print("-" * 50)
+        print(doc.page_content)
+        print()
+
+
+if __name__ == "__main__":
+    vector_db = create_vector_db()
+    test_similarity_search(vector_db)
+
+
+# TO LOAD MUTIPLE PDFs
+
+# from pathlib import Path
+# from langchain_community.document_loaders import PyPDFLoader
+
+# documents = []
+
+# pdf_folder = Path("data")
+
+# for pdf_file in pdf_folder.glob("*.pdf"):
+#     print(f"Loading {pdf_file.name}...")
+#     loader = PyPDFLoader(str(pdf_file))
+#     documents.extend(loader.load())
+
+# print(f"Loaded {len(documents)} pages from all PDFs.")
