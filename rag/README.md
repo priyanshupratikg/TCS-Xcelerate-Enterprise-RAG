@@ -1,76 +1,219 @@
+# RAG (Retrieval-Augmented Generation) Module
 
-## Introduction
+## Overview
 
-The README document provides a comprehensive guide for setting up and using the ChromaDB Vector Store module of the Enterprise RAG project. It serves as the primary documentation for developers, explaining the purpose of the module, its implementation, installation steps, project structure, and execution process.
+The **RAG (Retrieval-Augmented Generation)** module is the core component of the Enterprise RAG system. It is responsible for processing PDF documents, preparing them for semantic retrieval, generating vector embeddings, storing them in a vector database, and retrieving the most relevant information for user queries.
 
-## Purpose
+The module follows a sequential pipeline where document text is extracted, divided into manageable chunks, converted into embeddings, and stored in ChromaDB. During retrieval, user queries are embedded and compared with the stored document embeddings to return the most relevant document chunks.
 
-The purpose of the Vector Store module is to create a semantic knowledge base from PDF documents. It processes document content by generating vector embeddings and storing them in a persistent ChromaDB database. These stored embeddings are later used for similarity search, enabling the Retrieval-Augmented Generation (RAG) system to retrieve relevant information efficiently.
+---
 
-## Technologies Used
+# Objectives
+
+The RAG module is designed to:
+
+* Extract text from PDF documents.
+* Split extracted text into smaller chunks.
+* Generate embeddings using Sentence Transformers.
+* Store embeddings in ChromaDB.
+* Perform semantic similarity search.
+* Provide relevant document context for downstream Large Language Models (LLMs).
+
+---
+
+# Folder Structure
+
+```text
+rag/
+├── pdf_loader.py
+├── chunker.py
+├── embedder.py
+├── embeddings.py
+├── vectorstore.py
+└── README.md
+```
+
+---
+
+# Module Description
+
+## 1. pdf_loader.py
+
+This module is responsible for loading PDF documents and extracting text using **PyMuPDF**.
+
+Responsibilities:
+
+* Read PDF documents from the `data` directory.
+* Extract text from every page.
+* Return the extracted content for further processing.
+
+---
+
+## 2. chunker.py
+
+This module divides the extracted document into smaller overlapping chunks using the **LangChain Recursive Character Text Splitter**.
+
+Responsibilities:
+
+* Split large documents into smaller chunks.
+* Maintain context using chunk overlap.
+* Prepare chunks for embedding generation.
+
+---
+
+## 3. embedder.py
+
+This module generates embeddings for each text chunk using **Sentence Transformers**.
+
+Responsibilities:
+
+* Load the embedding model.
+* Convert text chunks into vector embeddings.
+* Generate embeddings for user queries.
+
+---
+
+## 4. embeddings.py
+
+This module initializes and manages the Hugging Face embedding model used throughout the application.
+
+Responsibilities:
+
+* Load the embedding model.
+* Provide reusable embedding functions.
+* Support document and query embedding generation.
+
+---
+
+## 5. vectorstore.py
+
+This module creates and manages the ChromaDB vector database.
+
+Responsibilities:
+
+* Receive processed document chunks.
+* Store embeddings in ChromaDB.
+* Perform semantic similarity search.
+* Return the most relevant document chunks.
+
+---
+
+# Workflow
+
+```
+PDF Documents
+       │
+       ▼
+pdf_loader.py
+       │
+       ▼
+Text Extraction
+       │
+       ▼
+chunker.py
+       │
+       ▼
+Text Chunks
+       │
+       ▼
+embedder.py
+       │
+       ▼
+Vector Embeddings
+       │
+       ▼
+vectorstore.py
+       │
+       ▼
+ChromaDB
+       │
+       ▼
+Similarity Search
+       │
+       ▼
+Relevant Document Chunks
+```
+
+---
+
+# Technologies Used
 
 * Python
-* ChromaDB
+* PyMuPDF
 * LangChain
-* Hugging Face Embeddings
+* LangChain Text Splitters
 * Sentence Transformers
-* PyPDF
-* Recursive Character Text Splitter
+* Hugging Face Embeddings
+* ChromaDB
 
-## Project Structure
+---
 
-The project is organized into separate directories for data, vector database storage, and source code. PDF documents are stored in the `data` directory, while the generated vector database is stored in the `database/vectordb` directory. The implementation files, including the embedding model and vector store logic, are located in the `rag` folder.
+# Installation
 
-## Implementation Workflow
+Install the required dependencies before running the project:
 
-The implementation follows these steps:
+```bash
+pip install pymupdf
+pip install langchain
+pip install langchain-community
+pip install langchain-text-splitters
+pip install langchain-huggingface
+pip install sentence-transformers
+pip install langchain-chroma
+pip install chromadb
+pip install pypdf
+```
 
-1. Load PDF documents from the `data` folder.
-2. Extract text from the documents.
-3. Split the extracted text into smaller chunks.
-4. Generate embeddings for each text chunk using the Hugging Face embedding model.
-5. Store the generated embeddings in the persistent ChromaDB vector database.
-6. Accept a user query and generate its embedding.
-7. Perform semantic similarity search to retrieve the most relevant document chunks.
+---
 
-## Installation
+# Running the Module
 
-Before running the project, install all required dependencies:
-
-* chromadb
-* langchain
-* langchain-community
-* langchain-chroma
-* langchain-text-splitters
-* langchain-huggingface
-* sentence-transformers
-* pypdf
-
-## Execution
-
-Run the Vector Store module from the project root directory:
+Execute the vector store module from the project root directory:
 
 ```bash
 python -m rag.vectorstore
 ```
 
-The application loads the PDF documents, creates document embeddings, stores them in ChromaDB, and performs similarity search for user queries.
+---
 
-## Features
+# Features
 
-* PDF document loading
-* Automatic text chunking
-* Hugging Face embedding generation
-* Persistent ChromaDB storage
+* PDF text extraction
+* Automatic document chunking
+* Embedding generation using Sentence Transformers
+* Persistent ChromaDB vector database
 * Semantic similarity search
-* Modular and scalable implementation
-* Easy integration with the Enterprise RAG pipeline
+* Modular pipeline design
+* Easy integration with backend APIs and LLMs
 
-## Expected Outcome
+---
 
-After successful execution, the system creates a persistent ChromaDB vector database containing embeddings generated from the PDF documents. Users can submit natural language queries, and the similarity search retrieves the most relevant document chunks, improving the accuracy and efficiency of the RAG system.
+# Expected Output
 
-## Conclusion
+After successful execution:
 
-The README documentation provides all necessary information required to understand, configure, execute, and maintain the ChromaDB Vector Store module. It enables developers to quickly set up the environment, understand the workflow, and integrate the module into the complete Enterprise RAG application.
+* PDF documents are processed successfully.
+* Text is extracted from each document.
+* Documents are divided into meaningful chunks.
+* Embeddings are generated for every chunk.
+* ChromaDB stores the embeddings persistently.
+* User queries retrieve the most relevant document chunks using semantic similarity search.
+
+---
+
+
+# Future Enhancements
+
+* Support multiple document formats (DOCX, TXT, HTML).
+* Hybrid search (keyword + semantic search).
+* Metadata-based filtering.
+* Incremental document indexing.
+* Support for multiple vector collections.
+* Integration with advanced Large Language Models (LLMs).
+
+---
+
+# Conclusion
+
+The RAG module forms the foundation of the Enterprise RAG system by transforming unstructured PDF documents into searchable vector representations. Through document extraction, intelligent chunking, embedding generation, and semantic retrieval, the module enables fast, context-aware information retrieval and provides high-quality context for downstream AI applications.
 
