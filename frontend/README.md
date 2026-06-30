@@ -1,16 +1,61 @@
-# React + Vite
+# TCS Xcelerate Enterprise RAG
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## Overview
 
-Currently, two official plugins are available:
+The Enterprise RAG (Retrieval-Augmented Generation) project is an AI-powered chatbot that enables users to retrieve information from uploaded institutional documents using Large Language Models (LLMs).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+This repository contains both the backend and frontend of the application.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Frontend Overview
 
-## Expanding the Oxlint configuration
+The frontend is developed using **React** and **Vite**. It provides an intuitive user interface where users can upload documents, interact with the chatbot, and receive AI-generated responses.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+---
+
+## Features
+
+- Modern React-based UI
+- Responsive design
+- Chat interface
+- Document upload
+- API integration with backend
+- Component-based architecture
+- Fast development using Vite
+
+---
+
+## Technologies Used
+
+- React
+- Vite
+- JavaScript (ES6+)
+- CSS
+- REST API
+
+---
+
+## Project Structure
+
+frontend/
+```
+src/
+├── assets/
+├── components/
+│ ├── ChatBubble.jsx
+│ ├── FileUploader.jsx
+│ ├── Footer.jsx
+│ └── Sidebar.jsx
+├── pages/
+│ ├── ChatPage.jsx
+│ └── UploadPage.jsx
+├── services/
+│ └── api.js
+├── App.jsx
+├── main.jsx
+└── index.css
+
+public/
+package.json
+vite.config.js
