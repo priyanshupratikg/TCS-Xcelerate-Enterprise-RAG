@@ -88,17 +88,5 @@ After the vector store module is executed successfully:
 
 ---
 
-# Future Enhancements
 
-* Support multiple vector collections.
-* Add metadata-based filtering.
-* Enable incremental document indexing.
-* Integrate cloud-based vector database storage.
-* Improve scalability for large document collections.
-
----
-
-# Conclusion
-
-The **database** module serves as the persistent storage layer of the Enterprise RAG system. By storing vector embeddings in ChromaDB, it enables efficient semantic retrieval of document information, improving both the speed and accuracy of the overall application.
 
